@@ -1,26 +1,56 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      items: [],
+      isLoaded: false,
+    };
+  };
+
+
+  //learning to pull from JSON files 
+componentDidMount() {
+  
+  fetch('https://jsonplaceholder.typicode.com/users')
+    .then(res => {
+      return res.json();
+    })
+    .then(data => {
+      // console.log(data[1].name);
+      this.setState ({
+        isLoaded: true,
+        items: data,
+      })
+    })
 }
 
+
+  render() {
+    let {isLoaded, items} = this.state;
+    console.log(items)  
+    if (!isLoaded) {
+      return <div>Loading...</div>;
+    }else { 
+      return (
+       <div>
+          <div>
+           <ul>
+             {items.map(el => {
+               return (
+               <li>Name: {el.name} | Username: {el.username} | <a href={`https://${el.website}`}>Website</a></li>
+               )
+             })}
+           </ul>
+         </div>
+        </div>
+      
+      );
+    }
+  };
+};
+
 export default App;
+   
